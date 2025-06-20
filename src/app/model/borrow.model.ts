@@ -1,5 +1,6 @@
 import { model, Schema } from "mongoose";
 import { BorrowBooks } from "../interface/borrow.interface";
+import { Book } from "./books.model";
 
 const borroBook = new Schema<BorrowBooks>(
   {
@@ -12,5 +13,15 @@ const borroBook = new Schema<BorrowBooks>(
     timestamps: true,
   }
 );
+
+borroBook.pre("save", async function (doc) {
+  const bookCopies = await Book.findOne({ _id: this.book });
+  if (
+    bookCopies?.copies === this.quantity ||
+    (bookCopies?.copies as number) < this.quantity
+  ) {
+    return this.quantity;
+  }
+});
 
 export const Borrow = model("Borrow", borroBook);
