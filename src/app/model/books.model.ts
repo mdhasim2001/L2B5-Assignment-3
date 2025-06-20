@@ -23,9 +23,9 @@ const bookSchema = new Schema<Books>(
       ],
       required: true,
     },
-    isbn: { type: String, required: true },
+    isbn: { type: String, required: true, unique: true },
     description: { type: String },
-    copies: { type: Number },
+    copies: { type: Number, min: 0 },
     available: { type: Boolean },
   },
   {
@@ -33,5 +33,13 @@ const bookSchema = new Schema<Books>(
     timestamps: true,
   }
 );
+
+bookSchema.pre("save", async function (doc) {
+  if (this.copies === 0) {
+    this.available = false;
+  } else {
+    this.available = true;
+  }
+});
 
 export const Book = model("Book", bookSchema);

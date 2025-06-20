@@ -3,7 +3,7 @@ import { BorrowBooks } from "../interface/borrow.interface";
 
 const borroBook = new Schema<BorrowBooks>(
   {
-    book: { type: String, required: true },
+    book: { type: Schema.Types.ObjectId, ref: "Book", required: true },
     quantity: { type: Number, required: true },
     dueDate: { type: Date, default: Date.now },
   },
