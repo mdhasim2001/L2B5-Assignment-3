@@ -13,15 +13,18 @@ bookRoutes.post("/", async (req: Request, res: Response) => {
   });
 });
 
+// /api/books?filter=FANTASY&sortBy=createdAt&sort=desc&limit=5
 bookRoutes.get("/", async (req: Request, res: Response) => {
-  const queryData = req.query;
+  const { filter, sortBy, sort, limit } = req.query;
   let data = [];
-  if (queryData) {
-    data = await Book.find(queryData);
+  if (filter) {
+    data = await Book.find({ genre: filter })
+      .sort({ [sortBy as any]: sort as any })
+      .limit(limit as any);
   } else {
     data = await Book.find();
   }
-  res.status(201).send({
+  res.status(200).send({
     success: true,
     message: "Book retrieved successfully",
     data,
@@ -31,7 +34,7 @@ bookRoutes.get("/", async (req: Request, res: Response) => {
 bookRoutes.get("/:bookId", async (req: Request, res: Response) => {
   const book = req.params.bookId;
   const data = await Book.findById(book);
-  res.status(201).send({
+  res.status(200).send({
     success: true,
     message: "Book retrieved successfully",
     data,
@@ -42,7 +45,7 @@ bookRoutes.put("/:bookId", async (req: Request, res: Response) => {
   const bookId = req.params.bookId;
   const bookBody = req.body;
   const data = await Book.findByIdAndUpdate(bookId, bookBody, { new: true });
-  res.status(201).send({
+  res.status(200).send({
     success: true,
     message: "Book updated successfully",
     data,
