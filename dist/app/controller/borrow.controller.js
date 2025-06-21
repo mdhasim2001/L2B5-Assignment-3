@@ -27,8 +27,9 @@ exports.borrowBook.post("/", (req, res) => __awaiter(void 0, void 0, void 0, fun
         });
     }
     catch (error) {
-        res.status(400).send({
+        res.status(404).send({
             success: false,
+            error,
         });
     }
 }));
@@ -41,7 +42,7 @@ exports.borrowBook.get("/", (req, res) => __awaiter(void 0, void 0, void 0, func
         });
     }
     catch (error) {
-        res.status(400).send({
+        res.status(404).send({
             success: false,
             error,
         });

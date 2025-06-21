@@ -20,13 +20,17 @@ const borroBook = new mongoose_1.Schema({
     versionKey: false,
     timestamps: true,
 });
-borroBook.pre("save", function (doc) {
+borroBook.pre("save", function (next) {
     return __awaiter(this, void 0, void 0, function* () {
         const bookCopies = yield books_model_1.Book.findOne({ _id: this.book });
-        if ((bookCopies === null || bookCopies === void 0 ? void 0 : bookCopies.copies) === this.quantity ||
-            (bookCopies === null || bookCopies === void 0 ? void 0 : bookCopies.copies) < this.quantity) {
-            return this.quantity;
+        if ((bookCopies === null || bookCopies === void 0 ? void 0 : bookCopies.copies) === 0) {
+            return next(new Error("Sorry stock in not avaiable"));
         }
+        else if ((bookCopies === null || bookCopies === void 0 ? void 0 : bookCopies.copies) < this.quantity ||
+            this.quantity === 0) {
+            return next(new Error(`Sorry stock is ${bookCopies === null || bookCopies === void 0 ? void 0 : bookCopies.copies} avaiable`));
+        }
+        next();
     });
 });
 exports.Borrow = (0, mongoose_1.model)("Borrow", borroBook);
