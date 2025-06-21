@@ -14,14 +14,17 @@ const borroBook = new Schema<BorrowBooks>(
   }
 );
 
-borroBook.pre("save", async function (doc) {
+borroBook.pre("save", async function(next) {
   const bookCopies = await Book.findOne({ _id: this.book });
-  if (
-    bookCopies?.copies === this.quantity ||
-    (bookCopies?.copies as number) < this.quantity
+  if (bookCopies?.copies === 0) {
+    return next(new Error("Sorry stock in not avaiable"));
+  } else if (
+    (bookCopies?.copies as number) < this.quantity ||
+    this.quantity === 0
   ) {
-    return this.quantity;
+    return next(new Error(`Sorry stock is ${bookCopies?.copies} avaiable`));
   }
+  next();
 });
 
 export const Borrow = model("Borrow", borroBook);

@@ -13,8 +13,9 @@ borrowBook.post("/", async (req: Request, res: Response) => {
       data,
     });
   } catch (error) {
-    res.status(400).send({
+    res.status(404).send({
       success: false,
+      error,
     });
   }
 });
@@ -27,7 +28,7 @@ borrowBook.get("/", async (req: Request, res: Response) => {
       data,
     });
   } catch (error) {
-    res.status(400).send({
+    res.status(404).send({
       success: false,
       error,
     });
