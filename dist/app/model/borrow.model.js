@@ -33,4 +33,16 @@ borroBook.pre("save", function (next) {
         next();
     });
 });
+borroBook.post("save", function (next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const quantity = this.quantity;
+        if (quantity) {
+            const bookData = yield books_model_1.Book.findById({ _id: this.book });
+            yield books_model_1.Book.findByIdAndUpdate({ _id: this.book }, {
+                copies: (bookData === null || bookData === void 0 ? void 0 : bookData.copies) - quantity,
+                available: (bookData === null || bookData === void 0 ? void 0 : bookData.copies) - quantity === 0 ? false : true,
+            }, { new: true });
+        }
+    });
+});
 exports.Borrow = (0, mongoose_1.model)("Borrow", borroBook);

@@ -27,4 +27,19 @@ borroBook.pre("save", async function(next) {
   next();
 });
 
+borroBook.post("save", async function(next) {
+  const quantity = this.quantity;
+  if (quantity) {
+    const bookData = await Book.findById({ _id: this.book });
+    await Book.findByIdAndUpdate(
+      { _id: this.book },
+      {
+        copies: (bookData?.copies as number) - quantity,
+        available: (bookData?.copies as number) - quantity === 0 ? false : true,
+      },
+      { new: true }
+    );
+  }
+});
+
 export const Borrow = model("Borrow", borroBook);
