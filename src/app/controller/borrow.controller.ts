@@ -35,8 +35,10 @@ borrowBook.get("/", async (req: Request, res: Response) => {
       { $unwind: "$book" },
       {
         $group: {
-          _id: "$book.title",
-          isbn: { $first: "$book.isbn" },
+          _id: {
+            title: "$book.title",
+            isbn: "$book.isbn",
+          },
           totalQuantity: { $sum: 1 },
         },
       },
@@ -44,8 +46,10 @@ borrowBook.get("/", async (req: Request, res: Response) => {
       {
         $project: {
           _id: 0,
-          title: "$_id",
-          isbn: 1,
+          book: {
+            title: "$_id.title",
+            isbn: "$_id.isbn",
+          },
           totalQuantity: 1,
         },
       },
