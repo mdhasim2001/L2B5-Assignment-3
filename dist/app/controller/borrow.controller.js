@@ -51,7 +51,7 @@ exports.borrowBook.get("/", (req, res) => __awaiter(void 0, void 0, void 0, func
                         title: "$book.title",
                         isbn: "$book.isbn",
                     },
-                    totalQuantity: { $sum: 1 },
+                    totalQuantity: { $sum: "$quantity" },
                 },
             },
             {

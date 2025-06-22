@@ -39,7 +39,7 @@ borrowBook.get("/", async (req: Request, res: Response) => {
             title: "$book.title",
             isbn: "$book.isbn",
           },
-          totalQuantity: { $sum: 1 },
+          totalQuantity: { $sum: "$quantity" },
         },
       },
 
