@@ -47,16 +47,20 @@ exports.borrowBook.get("/", (req, res) => __awaiter(void 0, void 0, void 0, func
             { $unwind: "$book" },
             {
                 $group: {
-                    _id: "$book.title",
-                    isbn: { $first: "$book.isbn" },
+                    _id: {
+                        title: "$book.title",
+                        isbn: "$book.isbn",
+                    },
                     totalQuantity: { $sum: 1 },
                 },
             },
             {
                 $project: {
                     _id: 0,
-                    title: "$_id",
-                    isbn: 1,
+                    book: {
+                        title: "$_id.title",
+                        isbn: "$_id.isbn",
+                    },
                     totalQuantity: 1,
                 },
             },

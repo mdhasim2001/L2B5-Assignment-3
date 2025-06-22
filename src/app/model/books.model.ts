@@ -7,6 +7,7 @@ const bookSchema = new Schema<Books>(
     title: {
       type: String,
       required: true,
+      unique: true,
     },
     author: {
       type: String,
@@ -35,7 +36,7 @@ const bookSchema = new Schema<Books>(
   }
 );
 
-bookSchema.pre("save", async function (doc) {
+bookSchema.pre("save", async function(doc) {
   if (this.copies === 0) {
     this.available = false;
   } else {
@@ -43,7 +44,7 @@ bookSchema.pre("save", async function (doc) {
   }
 });
 
-bookSchema.post("findOneAndDelete", async function (doc) {
+bookSchema.post("findOneAndDelete", async function(doc) {
   if (doc) {
     await Borrow.deleteMany({ book: doc._id });
   }
