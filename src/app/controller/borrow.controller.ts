@@ -24,13 +24,6 @@ borrowBook.get("/", async (req: Request, res: Response) => {
   try {
     const data = await Borrow.aggregate([
       {
-        $group: {
-          _id: "$book",
-          totalQuantity: { $sum: 1 },
-        },
-      },
-
-      {
         $lookup: {
           from: "books",
           localField: "book",
@@ -38,13 +31,31 @@ borrowBook.get("/", async (req: Request, res: Response) => {
           as: "book",
         },
       },
-      // { $project: { title: 1, isbn: 1, totalQuantity: 1 } },
+
+      { $unwind: "$book" },
+      {
+        $group: {
+          _id: "$book.title",
+          isbn: { $first: "$book.isbn" },
+          totalQuantity: { $sum: 1 },
+        },
+      },
+
+      {
+        $project: {
+          _id: 0,
+          title: "$_id",
+          isbn: 1,
+          totalQuantity: 1,
+        },
+      },
     ]);
 
-    // const book = await Borrow.find().populate("book");
+    // const data = await Borrow.find().populate("book");
 
     res.status(200).send({
       success: true,
+      message: "Borrowed books summary retrieved successfully",
       data,
     });
   } catch (error) {
