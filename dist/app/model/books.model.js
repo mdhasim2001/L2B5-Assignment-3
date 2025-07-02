@@ -32,6 +32,7 @@ const bookSchema = new mongoose_1.Schema({
             "BIOGRAPHY",
             "FANTASY",
         ],
+        uppercase: true,
         required: true,
     },
     isbn: { type: String, required: true, unique: true },

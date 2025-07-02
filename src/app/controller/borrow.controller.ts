@@ -3,7 +3,7 @@ import { Borrow } from "../model/borrow.model";
 
 export const borrowBook = express.Router();
 
-borrowBook.post("/", async (req: Request, res: Response) => {
+borrowBook.post("/create-borrow", async (req: Request, res: Response) => {
   try {
     const borrow = req.body;
     const data = await Borrow.create(borrow);
@@ -20,7 +20,7 @@ borrowBook.post("/", async (req: Request, res: Response) => {
   }
 });
 
-borrowBook.get("/", async (req: Request, res: Response) => {
+borrowBook.get("/borrow-summary", async (req: Request, res: Response) => {
   try {
     const data = await Borrow.aggregate([
       {
